@@ -38,8 +38,42 @@ describe('Lottery Tests', () => {
 
   });
 
+ it('Registering Multiple players',async () => {
+   await contractObject.methods.entry().send({
+     from: accounts[0],
+     value: web3.utils.toWei('0.02','ether')
+   });
+   await contractObject.methods.entry().send({
+     from: accounts[1],
+     value: web3.utils.toWei('0.02','ether')
+   });
+   await contractObject.methods.entry().send({
+     from: accounts[2],
+     value: web3.utils.toWei('0.02','ether')
+   });
+   const players = await contractObject.methods.getPlayers().call();
 
+ //    const players = await contractObject.methods.getPlayers().call({from: accounts[0]});
 
+   assert.equal(accounts[0], players[0]);
+   assert.equal(accounts[1], players[1]);
+   assert.equal(accounts[2], players[2]);
+   assert.equal(3, players.length);
+
+ });
+
+ it("Verifying the value of ether should be more than 0.01" , async () => {
+   try {
+     await contractObject.methods.entry().send({
+       from: accounts[1],
+       value: web3.utils.toWei('0.001','ether')
+     });
+     assert.fail("Check if default ether is less than mentioned");
+   } catch (e) {
+     //console.log("Passed the negative test");
+     assert.ok(e);
+   }
+   });
 
 
 });
