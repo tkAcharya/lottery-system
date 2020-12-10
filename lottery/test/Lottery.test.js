@@ -24,12 +24,19 @@ describe('Lottery Tests', () => {
     assert.ok(contractObject.options.address);
   });
 
-  // it('Registering a player',async () => {
-  //   await contractObject.methods.entry().send({ from: accounts[0]});
-  //   const message = await inbox.methods.message().call();
-  //   assert.equal(message , localMessage);
-  //
-  // });
+  it('Registering First player',async () => {
+    await contractObject.methods.entry().send({
+      from: accounts[0],
+      value: web3.utils.toWei('0.02','ether')
+    });
+    const players = await contractObject.methods.getPlayers().call();
+
+//    const players = await contractObject.methods.getPlayers().call({from: accounts[0]});
+
+    assert.equal(accounts[0], players[0]);
+    assert.equal(1, players.length);
+
+  });
 
 
 
