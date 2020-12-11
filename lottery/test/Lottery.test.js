@@ -87,5 +87,25 @@ describe('Lottery Tests', () => {
      }
      });
 
+   it("End to End Testing of the Contract",async () => {
+     await contractObject.methods.entry().send({
+       from: accounts[0],
+       value: web3.utils.toWei('2','ether')
+     });
+
+     const initialBalance = await web3.eth.getBalance(accounts[0]);
+
+     await contractObject.methods.pickWinner().send({
+       from: accounts[0]
+     })
+
+     const finalBalance = await web3.eth.getBalance(accounts[0]);
+     const differenceBalance = finalBalance - initialBalance;
+     const players = await contractObject.methods.getPlayers().call();
+
+     //console.log(differenceBalance);
+     assert(differenceBalance > web3.utils.toWei('1.8','ether'))
+     assert.equal(0, players.length);
+   });
 
 });
